@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porsche 911 Carrera S — Форма скорости</title>
+<meta name="description" content="Porsche 911 Carrera S. Каждая линия — инженерное решение.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-mark">911</div>
+  <div class="loader-track"><div class="loader-bar" id="loaderBar"></div></div>
+  <div class="loader-pct" id="loaderPct">0%</div>
+</div>
+
+<!-- Nav -->
+<header class="nav" id="nav">
+  <a href="#top" class="nav-logo">PORSCHE</a>
+  <nav class="nav-links">
+    <a href="#philosophy">Философия</a>
+    <a href="#specs">Характеристики</a>
+    <a href="#colors">Комплектации</a>
+    <a href="#gallery">Галерея</a>
+  </nav>
+  <a href="#contact" class="nav-cta">Тест-драйв</a>
+  <button class="nav-burger" id="navBurger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+<div class="nav-mobile" id="navMobile">
+  <a href="#philosophy">Философия</a>
+  <a href="#specs">Характеристики</a>
+  <a href="#colors">Комплектации</a>
+  <a href="#gallery">Галерея</a>
+  <a href="#contact" class="nav-mobile-cta">Тест-драйв</a>
+</div>
+
+<!-- HERO SCROLL SCRUB -->
+<section class="hero" id="top">
+  <div class="hero-pin">
+    <video id="heroVideo" src="assets/video/turntable.mp4" muted playsinline preload="auto"></video>
+    <div class="hero-vignette"></div>
+
+    <div class="hud hud-top">
+      <span class="hud-eyebrow">PORSCHE 911 · CARRERA&nbsp;S</span>
+      <span class="hud-speed"><span id="speedVal">0</span><small>км/ч</small></span>
+    </div>
+
+    <div class="hero-copy">
+      <h1 class="hero-line" id="line1">ФОРМА,<br>ОТТОЧЕННАЯ&nbsp;ВРЕМЕНЕМ.</h1>
+      <h1 class="hero-line" id="line2">КАЖДАЯ ЛИНИЯ —<br>ИНЖЕНЕРНОЕ&nbsp;РЕШЕНИЕ.</h1>
+      <h1 class="hero-line" id="line3">УЖЕ&nbsp;ВПЕРЕДИ.</h1>
+    </div>
+
+    <div class="hud hud-bottom">
+      <div class="hud-stat">
+        <span class="hud-label">0–100 км/ч</span>
+        <span class="hud-value" id="accelVal">0.0<small>с</small></span>
+      </div>
+      <div class="hud-progress">
+        <div class="hud-progress-fill" id="scrollFill"></div>
+      </div>
+      <div class="hud-stat hud-stat-right">
+        <span class="hud-label">Передача</span>
+        <span class="hud-value" id="gearVal">N</span>
+      </div>
+    </div>
+
+    <div class="scroll-hint" id="scrollHint">
+      <span>Прокрутите вниз</span>
+      <div class="scroll-hint-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="philosophy-grid">
+    <div class="philosophy-media">
+      <img src="assets/frames/frame_001.jpg" alt="Porsche 911 — передняя фара" loading="lazy">
+    </div>
+    <div class="philosophy-text">
+      <span class="eyebrow">Философия</span>
+      <h2>Ничего лишнего. Всё — по делу.</h2>
+      <p>Силуэт 911 не менялся семь поколений, потому что менять было нечего. Каждый радиус кузова — результат тысяч часов в аэродинамической трубе, а не дизайнерский жест. Форма служит функции, функция подчинена скорости.</p>
+      <div class="philosophy-facts">
+        <div><strong>0.28</strong><span>Cx аэродинамики</span></div>
+        <div><strong>7</strong><span>поколений эволюции</span></div>
+        <div><strong>1963</strong><span>год рождения силуэта</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="specs" id="specs">
+  <div class="specs-head">
+    <span class="eyebrow eyebrow-light">Характеристики</span>
+    <h2>Паспорт данных</h2>
+  </div>
+  <div class="specs-table">
+    <div class="specs-row">
+      <span class="specs-name">Двигатель</span>
+      <span class="specs-val">3.0 л Boxer, твин-турбо</span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-name">Мощность</span>
+      <span class="specs-val" data-count="480">0<small>л.с.</small></span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-name">Крутящий момент</span>
+      <span class="specs-val" data-count="570">0<small>Н·м</small></span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-name">Разгон 0–100 км/ч</span>
+      <span class="specs-val" data-count="3.5" data-decimal="1">0<small>с</small></span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-name">Максимальная скорость</span>
+      <span class="specs-val" data-count="308">0<small>км/ч</small></span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-name">Снаряжённая масса</span>
+      <span class="specs-val" data-count="1515">0<small>кг</small></span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-name">Привод</span>
+      <span class="specs-val">Задний / Полный (опция)</span>
+    </div>
+  </div>
+</section>
+
+<!-- COLORS -->
+<section class="colors" id="colors">
+  <span class="eyebrow">Комплектации</span>
+  <h2>Цвет — это тоже инженерия</h2>
+  <div class="colors-row">
+    <div class="color-item">
+      <span class="color-swatch" style="--swatch:#C40018"></span>
+      <span class="color-name">Guards Red</span>
+    </div>
+    <div class="color-item">
+      <span class="color-swatch" style="--swatch:#B9BDC1"></span>
+      <span class="color-name">GT Silver Metallic</span>
+    </div>
+    <div class="color-item">
+      <span class="color-swatch" style="--swatch:#101114"></span>
+      <span class="color-name">Jet Black Metallic</span>
+    </div>
+    <div class="color-item">
+      <span class="color-swatch" style="--swatch:#3B4A2E"></span>
+      <span class="color-name">Python Green</span>
+    </div>
+    <div class="color-item">
+      <span class="color-swatch" style="--swatch:#E7E5DD"></span>
+      <span class="color-name">Chalk</span>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <span class="eyebrow">Галерея</span>
+  <h2>С каждого угла — характер</h2>
+  <div class="gallery-strip">
+    <img src="assets/frames/frame_006.jpg" alt="Порше 911, вид спереди" loading="lazy">
+    <img src="assets/frames/frame_018.jpg" alt="Порше 911, боковая линия" loading="lazy">
+    <img src="assets/frames/frame_030.jpg" alt="Порше 911, заднее крыло" loading="lazy">
+    <img src="assets/frames/frame_048.jpg" alt="Порше 911, вид сзади" loading="lazy">
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="cta-inner">
+    <span class="eyebrow">Тест-драйв</span>
+    <h2>Прочувствуйте разгон лично.</h2>
+    <p>Запишитесь на тест-драйв в ближайшем дилерском центре — мы подберём удобное время.</p>
+    <form class="cta-form" id="ctaForm">
+      <input type="text" placeholder="Имя" required>
+      <input type="tel" placeholder="Телефон" required>
+      <button type="submit">Записаться</button>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-top">
+    <span class="footer-logo">PORSCHE</span>
+    <div class="footer-links">
+      <a href="#philosophy">Философия</a>
+      <a href="#specs">Характеристики</a>
+      <a href="#colors">Комплектации</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#contact">Контакт</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Концепт-сайт 911 Carrera S. Демонстрационный проект.</span>
+    <span>Штутгарт, Германия</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
