@@ -113,6 +113,11 @@
     ];
   }
 
+  // Linear interpolation between keyframes keeps playback speed continuous
+  // across segment boundaries. Easing per-segment (e.g. easeInOutCubic) makes
+  // velocity hit zero at every keyframe, which reads as the video "stopping"
+  // each time a caption switch point is crossed — that's the stutter we're
+  // removing here.
   function videoTimeForProgress(progress){
     const kf = getVideoKeyframes();
     for(let i = 0; i < kf.length - 1; i++){
@@ -120,7 +125,7 @@
       if(progress <= b.p || i === kf.length - 2){
         const span = b.p - a.p;
         const localT = span > 0 ? Math.min(1, Math.max(0, (progress - a.p) / span)) : 1;
-        return a.t + (b.t - a.t) * easeInOutCubic(localT);
+        return a.t + (b.t - a.t) * localT;
       }
     }
     return kf[kf.length - 1].t;
