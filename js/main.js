@@ -135,10 +135,23 @@
   let smoothProgress = 0;
   let loopStarted = false;
 
+  // Cache viewport height instead of reading window.innerHeight every frame —
+  // on mobile Safari/Chrome the address bar shows/hides while scrolling and
+  // innerHeight changes with it, which otherwise makes the scroll progress
+  // (and the video) jitter mid-scrub. We only refresh this on real resize/
+  // orientation events, not continuously.
+  let viewportH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
   function computeTargetProgress(){
     const rect = heroSection.getBoundingClientRect();
-    const total = heroSection.offsetHeight - window.innerHeight;
+    const total = heroSection.offsetHeight - viewportH;
     targetProgress = Math.max(0, Math.min(1, total > 0 ? (-rect.top) / total : 0));
+  }
+
+  function refreshViewportH(){
+    viewportH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    computeTargetProgress();
+    renderVisuals(smoothProgress);
   }
 
   /* ---------- Touch scrub (mobile) ---------- */
@@ -191,7 +204,8 @@
     }
   }
 
-  window.addEventListener('resize', () => { computeTargetProgress(); renderVisuals(smoothProgress); });
+  window.addEventListener('resize', refreshViewportH);
+  window.addEventListener('orientationchange', refreshViewportH);
 
   /* ---------- Mobile nav ---------- */
   const navBurger = document.getElementById('navBurger');

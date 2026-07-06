@@ -17,6 +17,8 @@
   --font-mono:'JetBrains Mono', monospace;
 
   --nav-h:76px;
+  --safe-t:env(safe-area-inset-top, 0px);
+  --safe-b:env(safe-area-inset-bottom, 0px);
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
@@ -148,6 +150,9 @@ button{ font-family:var(--font-body); }
   height:100vh; width:100%;
   overflow:hidden;
   background:#0B0C0E;
+}
+@supports (height: 100dvh){
+  .hero-pin{ height:100dvh; }
 }
 #heroVideo{
   position:absolute; inset:0;
@@ -384,14 +389,20 @@ button{ font-family:var(--font-body); }
 }
 
 @media (max-width:760px){
-  .nav{ padding:0 20px; }
+  .nav{
+    height:calc(60px + var(--safe-t));
+    padding:0 18px;
+    padding-top:var(--safe-t);
+  }
   .nav-links{ display:none; }
   .nav-cta{ display:none; }
   .nav-burger{ display:flex; }
 
+  .nav-mobile{ top:calc(60px + var(--safe-t)); }
+
   .hud{ padding:0 16px; }
-  .hud-top{ top:80px; }
-  .hud-eyebrow{ font-size:10px; }
+  .hud-top{ top:calc(64px + var(--safe-t)); }
+  .hud-eyebrow{ font-size:10px; letter-spacing:0.12em; }
   .hud-speed{ font-size:16px; }
 
   /* На мобиле показываем машину целиком */
@@ -401,26 +412,46 @@ button{ font-family:var(--font-body); }
     background:#0B0C0E;
   }
 
-  .hero-copy{ padding:0 16px; bottom:130px; }
-  .hero-line{ left:16px; right:16px; font-size:clamp(22px,6.5vw,36px); line-height:1.05; }
+  .hero-copy{ padding:0 16px; bottom:calc(120px + var(--safe-b)); }
+  .hero-line{ left:16px; right:16px; font-size:clamp(21px,6.2vw,34px); line-height:1.08; letter-spacing:0.005em; }
 
-  .hud-bottom{ bottom:20px; gap:10px; padding:0 16px; }
-  .hud-stat{ min-width:60px; }
+  .hud-bottom{ bottom:calc(18px + var(--safe-b)); gap:10px; padding:0 16px; }
+  .hud-stat{ min-width:56px; }
   .hud-label{ font-size:9px; }
   .hud-value{ font-size:15px; }
   .scroll-hint{ display:none; }
 
-  .philosophy-facts{ gap:24px; flex-wrap:wrap; }
-  .specs-row{ flex-direction:column; align-items:flex-start; gap:6px; padding:18px 4px; }
-  .specs-val{ font-size:20px; }
-  .colors-row{ gap:32px; }
-  .gallery-strip img{ width:260px; height:170px; }
+  .philosophy{ padding:72px 20px; }
+  .philosophy-facts{ gap:22px; flex-wrap:wrap; }
+  .philosophy-facts strong{ font-size:28px; }
+  .philosophy-text p{ font-size:16px; max-width:none; }
+
+  .specs{ padding:72px 20px; }
+  .specs-row{ align-items:baseline; padding:16px 2px; gap:12px; }
+  .specs-name{ font-size:14px; min-width:0; flex-shrink:1; }
+  .specs-val{ font-size:18px; flex-shrink:0; white-space:nowrap; }
+
+  .colors{ padding:72px 20px; }
+  .colors-row{ gap:28px; row-gap:28px; }
+  .color-swatch{ width:52px; height:52px; }
+
+  .gallery{ padding:72px 0 72px 20px; }
+  .gallery-strip{ padding-right:20px; gap:14px; }
+  .gallery-strip img{ width:76vw; max-width:320px; height:auto; aspect-ratio:16/10; }
+
+  .cta{ padding:80px 20px calc(80px + var(--safe-b)); }
   .cta-form{ flex-direction:column; }
-  .footer-top{ flex-direction:column; align-items:flex-start; }
+  .cta-form input, .cta-form button{ min-height:50px; }
+
+  .footer{ padding:40px 20px calc(28px + var(--safe-b)); }
+  .footer-top{ flex-direction:column; align-items:flex-start; gap:16px; }
+  .footer-bottom{ flex-direction:column; gap:8px; }
 }
 
 @media (max-width:420px){
-  .hero-line{ font-size:clamp(20px,6vw,30px); }
+  .hero-line{ font-size:clamp(19px,5.8vw,28px); }
   .hud-value{ font-size:13px; }
   .hud-bottom{ gap:6px; }
+  .hud-stat{ min-width:48px; }
+  .gallery-strip img{ width:82vw; }
 }
