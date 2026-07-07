@@ -5,8 +5,35 @@
 
   /* ---------- Video setup ---------- */
   const video = document.getElementById('heroVideo');
+  const videoBg = document.getElementById('heroVideoBg');
   let videoDuration = 0;
   let videoReady = false;
+
+  // The blurred full-bleed background video is only needed on narrow/mobile
+  // viewports (desktop already fills the screen with the sharp video via
+  // object-fit:cover). Loading a second video decoder is not free, so only
+  // start it where it's actually used, and keep it in sync cheaply.
+  const mobileMedia = window.matchMedia('(max-width:760px)');
+  let bgVideoStarted = false;
+
+  function ensureBgVideo(){
+    if(bgVideoStarted || !mobileMedia.matches) return;
+    bgVideoStarted = true;
+    videoBg.preload = 'auto';
+    videoBg.load();
+  }
+  ensureBgVideo();
+  mobileMedia.addEventListener('change', ensureBgVideo);
+
+  let lastBgSync = 0;
+  function syncBgVideo(now){
+    if(!bgVideoStarted || videoBg.readyState < 1) return;
+    // ~8 updates/sec is plenty since the layer is heavily blurred — no need
+    // to burn extra decode/seek work keeping it frame-perfect.
+    if(now - lastBgSync < 120) return;
+    lastBgSync = now;
+    try{ videoBg.currentTime = video.currentTime; }catch(e){ /* ignore */ }
+  }
 
   const loaderEl = document.getElementById('loader');
   const loaderBar = document.getElementById('loaderBar');
@@ -42,6 +69,13 @@
   video.addEventListener('loadeddata', () => {
     setTimeout(() => { if(!videoReady) onVideoReady(); }, 800);
   }, { once:true });
+  // Hard failsafe: whatever happens with the video (slow connection, decode
+  // error, unsupported format on some device) the loader must NEVER stay up
+  // and block the whole site forever — that would make every button,
+  // including the burger menu, feel "broken" when it's really just stuck
+  // behind an invisible full-screen overlay.
+  video.addEventListener('error', () => { if(!videoReady) onVideoReady(); });
+  setTimeout(() => { if(!videoReady) onVideoReady(); }, 6000);
 
   video.load();
 
@@ -102,11 +136,21 @@
   function lerp(a, b, t){ return a + (b - a) * t; }
 
   // Video keyframes — continuous, no pauses/holds.
+  //
+  // The source footage has a ~20% "dead" intro where the car barely moves
+  // (camera just creeps in on a straight-on shot) before the turntable
+  // rotation actually kicks in around frame 28/142 (~0.18 of the duration).
+  // Mapped 1:1 to scroll, that meant the speed counter was already climbing
+  // while the car visibly sat still — feels broken. So we fast-forward
+  // through that dead zone in just the first sliver of scroll (0 → 0.04),
+  // then spend the rest of the first caption band on the part that actually
+  // rotates.
   function getVideoKeyframes(){
     const dur = videoDuration || 0;
     const endFrame = Math.max(0, dur - 0.02);
     return [
       { p: 0,                t: 0 },
+      { p: 0.04,              t: dur * 0.183 },
       { p: CAPTION_SWITCH_1, t: dur * 0.33 },
       { p: CAPTION_SWITCH_2, t: dur * 0.72 },
       { p: 1,                t: endFrame },
@@ -164,6 +208,7 @@
     const eased = easeOutCubic(progress);
 
     setVideoTime(videoTimeForProgress(progress));
+    syncBgVideo(performance.now());
 
     speedVal.textContent = Math.round(eased * TOP_SPEED);
     accelVal.innerHTML = (eased * TOP_ACCEL).toFixed(1) + '<small>с</small>';
@@ -210,11 +255,19 @@
   /* ---------- Mobile nav ---------- */
   const navBurger = document.getElementById('navBurger');
   const navMobile = document.getElementById('navMobile');
+  navBurger.setAttribute('aria-expanded', 'false');
   navBurger.addEventListener('click', () => {
-    navMobile.classList.toggle('open');
+    const willOpen = !navMobile.classList.contains('open');
+    navMobile.classList.toggle('open', willOpen);
+    navBurger.classList.toggle('open', willOpen);
+    navBurger.setAttribute('aria-expanded', String(willOpen));
   });
   navMobile.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => navMobile.classList.remove('open'));
+    a.addEventListener('click', () => {
+      navMobile.classList.remove('open');
+      navBurger.classList.remove('open');
+      navBurger.setAttribute('aria-expanded', 'false');
+    });
   });
 
   /* ---------- Spec counters (count up when in view) ---------- */
@@ -254,7 +307,115 @@
     }
   }
 
-  /* ---------- CTA form (demo only) ---------- */
+  /* ---------- Scroll reveal ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+  revealEls.forEach(el => {
+    if(el.dataset.delay) el.style.setProperty('--rd', el.dataset.delay);
+  });
+  if(reduceMotion){
+    revealEls.forEach(el => el.classList.add('in-view'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    revealEls.forEach(el => revealObserver.observe(el));
+  }
+
+  /* ---------- Gallery lightbox ---------- */
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const galleryImgs = document.querySelectorAll('.gallery-strip img');
+
+  function openLightbox(img){
+    lightboxImg.src = img.currentSrc || img.src;
+    lightboxImg.alt = img.alt || '';
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  galleryImgs.forEach(img => {
+    img.addEventListener('click', () => openLightbox(img));
+  });
+  if(lightboxClose){
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
+  }
+
+  /* ---------- Color picker (updates preview image tone) ---------- */
+  const colorItems = document.querySelectorAll('.color-item');
+  const colorPreviewImg = document.getElementById('colorPreviewImg');
+  const colorPreviewTag = document.getElementById('colorPreviewTag');
+
+  function hexToHSL(hex){
+    hex = hex.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) / 255;
+    const g = parseInt(hex.substring(2, 4), 16) / 255;
+    const b = parseInt(hex.substring(4, 6), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    if(max !== min){
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        default: h = (r - g) / d + 4;
+      }
+      h /= 6;
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 };
+  }
+
+  // Since we only have one reference photo, we approximate each paint color
+  // as a tone-shifted preview via CSS filters rather than pretending to have
+  // a real studio shot per colorway.
+  function filterForColor(hex){
+    const { h, s, l } = hexToHSL(hex);
+    if(s < 12 || l > 85 || l < 8){
+      const bright = (0.3 + (l / 100) * 0.85).toFixed(2);
+      const contrast = l < 15 ? 1.2 : 1.05;
+      return `saturate(0.25) brightness(${bright}) contrast(${contrast})`;
+    }
+    const rotate = Math.round(h - 28);
+    const sat = l < 20 ? 2.6 : 3.4;
+    const bright = l < 20 ? 0.6 : 0.88;
+    return `sepia(0.5) saturate(${sat}) hue-rotate(${rotate}deg) brightness(${bright}) contrast(1.08)`;
+  }
+
+  function selectColor(btn){
+    colorItems.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    if(colorPreviewImg){
+      colorPreviewImg.style.filter = filterForColor(btn.dataset.color);
+    }
+    if(colorPreviewTag){
+      colorPreviewTag.textContent = btn.dataset.name || '';
+    }
+  }
+
+  colorItems.forEach(btn => {
+    btn.addEventListener('click', () => selectColor(btn));
+  });
+  if(colorItems.length){
+    selectColor(document.querySelector('.color-item.active') || colorItems[0]);
+  }
+
+
   const ctaForm = document.getElementById('ctaForm');
   if(ctaForm){
     ctaForm.addEventListener('submit', (e) => {

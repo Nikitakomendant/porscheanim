@@ -44,6 +44,7 @@
 <!-- HERO SCROLL SCRUB -->
 <section class="hero" id="top">
   <div class="hero-pin">
+    <video id="heroVideoBg" class="hero-video-bg" src="assets/video/turntable.mp4" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
     <video id="heroVideo" src="assets/video/turntable.mp4" muted playsinline preload="auto"></video>
     <div class="hero-vignette"></div>
 
@@ -82,10 +83,10 @@
 <!-- PHILOSOPHY -->
 <section class="philosophy" id="philosophy">
   <div class="philosophy-grid">
-    <div class="philosophy-media">
+    <div class="philosophy-media reveal">
       <img src="assets/frames/frame_001.jpg" alt="Porsche 911 — передняя фара" loading="lazy">
     </div>
-    <div class="philosophy-text">
+    <div class="philosophy-text reveal" data-delay="1">
       <span class="eyebrow">Философия</span>
       <h2>Ничего лишнего. Всё — по делу.</h2>
       <p>Силуэт 911 не менялся семь поколений, потому что менять было нечего. Каждый радиус кузова — результат тысяч часов в аэродинамической трубе, а не дизайнерский жест. Форма служит функции, функция подчинена скорости.</p>
@@ -100,36 +101,36 @@
 
 <!-- SPECS -->
 <section class="specs" id="specs">
-  <div class="specs-head">
+  <div class="specs-head reveal">
     <span class="eyebrow eyebrow-light">Характеристики</span>
     <h2>Паспорт данных</h2>
   </div>
   <div class="specs-table">
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="0">
       <span class="specs-name">Двигатель</span>
       <span class="specs-val">3.0 л Boxer, твин-турбо</span>
     </div>
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="1">
       <span class="specs-name">Мощность</span>
       <span class="specs-val" data-count="480">0<small>л.с.</small></span>
     </div>
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="2">
       <span class="specs-name">Крутящий момент</span>
       <span class="specs-val" data-count="570">0<small>Н·м</small></span>
     </div>
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="3">
       <span class="specs-name">Разгон 0–100 км/ч</span>
       <span class="specs-val" data-count="3.5" data-decimal="1">0<small>с</small></span>
     </div>
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="4">
       <span class="specs-name">Максимальная скорость</span>
       <span class="specs-val" data-count="308">0<small>км/ч</small></span>
     </div>
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="5">
       <span class="specs-name">Снаряжённая масса</span>
       <span class="specs-val" data-count="1515">0<small>кг</small></span>
     </div>
-    <div class="specs-row">
+    <div class="specs-row reveal" data-delay="6">
       <span class="specs-name">Привод</span>
       <span class="specs-val">Задний / Полный (опция)</span>
     </div>
@@ -138,47 +139,61 @@
 
 <!-- COLORS -->
 <section class="colors" id="colors">
-  <span class="eyebrow">Комплектации</span>
-  <h2>Цвет — это тоже инженерия</h2>
-  <div class="colors-row">
-    <div class="color-item">
-      <span class="color-swatch" style="--swatch:#C40018"></span>
-      <span class="color-name">Guards Red</span>
+  <div class="colors-head reveal">
+    <span class="eyebrow">Комплектации</span>
+    <h2>Цвет — это тоже инженерия</h2>
+  </div>
+  <div class="colors-body">
+    <div class="colors-preview reveal">
+      <img id="colorPreviewImg" src="assets/frames/frame_018.jpg" alt="Porsche 911 — предпросмотр цвета кузова" loading="lazy">
+      <span class="colors-preview-tag" id="colorPreviewTag">Guards Red</span>
     </div>
-    <div class="color-item">
-      <span class="color-swatch" style="--swatch:#B9BDC1"></span>
-      <span class="color-name">GT Silver Metallic</span>
-    </div>
-    <div class="color-item">
-      <span class="color-swatch" style="--swatch:#101114"></span>
-      <span class="color-name">Jet Black Metallic</span>
-    </div>
-    <div class="color-item">
-      <span class="color-swatch" style="--swatch:#3B4A2E"></span>
-      <span class="color-name">Python Green</span>
-    </div>
-    <div class="color-item">
-      <span class="color-swatch" style="--swatch:#E7E5DD"></span>
-      <span class="color-name">Chalk</span>
+    <div class="colors-row reveal" data-delay="1">
+      <button type="button" class="color-item active" data-color="#C40018" data-name="Guards Red" aria-pressed="true">
+        <span class="color-swatch" style="--swatch:#C40018"></span>
+        <span class="color-name">Guards Red</span>
+      </button>
+      <button type="button" class="color-item" data-color="#B9BDC1" data-name="GT Silver Metallic" aria-pressed="false">
+        <span class="color-swatch" style="--swatch:#B9BDC1"></span>
+        <span class="color-name">GT Silver Metallic</span>
+      </button>
+      <button type="button" class="color-item" data-color="#101114" data-name="Jet Black Metallic" aria-pressed="false">
+        <span class="color-swatch" style="--swatch:#101114"></span>
+        <span class="color-name">Jet Black Metallic</span>
+      </button>
+      <button type="button" class="color-item" data-color="#3B4A2E" data-name="Python Green" aria-pressed="false">
+        <span class="color-swatch" style="--swatch:#3B4A2E"></span>
+        <span class="color-name">Python Green</span>
+      </button>
+      <button type="button" class="color-item" data-color="#E7E5DD" data-name="Chalk" aria-pressed="false">
+        <span class="color-swatch" style="--swatch:#E7E5DD"></span>
+        <span class="color-name">Chalk</span>
+      </button>
     </div>
   </div>
 </section>
 
 <!-- GALLERY -->
 <section class="gallery" id="gallery">
-  <span class="eyebrow">Галерея</span>
-  <h2>С каждого угла — характер</h2>
+  <span class="eyebrow reveal">Галерея</span>
+  <h2 class="reveal">С каждого угла — характер</h2>
   <div class="gallery-strip">
-    <img src="assets/frames/frame_006.jpg" alt="Порше 911, вид спереди" loading="lazy">
-    <img src="assets/frames/frame_018.jpg" alt="Порше 911, боковая линия" loading="lazy">
-    <img src="assets/frames/frame_030.jpg" alt="Порше 911, заднее крыло" loading="lazy">
-    <img src="assets/frames/frame_048.jpg" alt="Порше 911, вид сзади" loading="lazy">
+    <img class="reveal" data-delay="0" src="assets/frames/frame_006.jpg" alt="Порше 911, вид спереди" loading="lazy">
+    <img class="reveal" data-delay="1" src="assets/frames/frame_018.jpg" alt="Порше 911, боковая линия" loading="lazy">
+    <img class="reveal" data-delay="2" src="assets/frames/frame_030.jpg" alt="Порше 911, заднее крыло" loading="lazy">
+    <img class="reveal" data-delay="3" src="assets/frames/frame_048.jpg" alt="Порше 911, вид сзади" loading="lazy">
   </div>
 </section>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <!-- CTA -->
 <section class="cta" id="contact">
-  <div class="cta-inner">
+  <div class="cta-inner reveal">
     <span class="eyebrow">Тест-драйв</span>
     <h2>Прочувствуйте разгон лично.</h2>
     <p>Запишитесь на тест-драйв в ближайшем дилерском центре — мы подберём удобное время.</p>
